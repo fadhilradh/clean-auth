@@ -27,7 +27,7 @@ func InitRouter(userHandler *user.Handler) {
 	}))
 
 	r.POST("/register", userHandler.CreateUser)
-	r.GET("/login", userHandler.Login)
+	r.POST("/login", userHandler.Login)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

@@ -30,4 +30,6 @@ func (h *Handler) CreateUser(c *gin.Context) {
 			"error" : err.Error(),
 		})
 	}
+
+	c.JSON(http.StatusOK, res)
 }

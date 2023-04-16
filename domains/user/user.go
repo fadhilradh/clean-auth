@@ -16,10 +16,23 @@ type CreateUserReq struct {
 }
 
 type CreateUserRes struct {
-	ID       string  `json:"id"`
+	ID       string `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Message  string `json:"message"`
+}
+
+type LoginReq struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginRes struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Message  string `json:"message"`
+	Token    string `json:"token"`
 }
 
 type Repository interface {
@@ -29,4 +42,5 @@ type Repository interface {
 
 type Service interface {
 	CreateUser(ctx context.Context, req *CreateUserReq) (*CreateUserRes, error)
+	Login(ctx context.Context, req *LoginReq) (*LoginRes, error)
 }

@@ -16,7 +16,7 @@ func InitRouter(userHandler *user.Handler) {
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"},
-		AllowMethods:     []string{"GET", "POST"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH"},
 		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -27,11 +27,13 @@ func InitRouter(userHandler *user.Handler) {
 	}))
 
 	r.POST("/register", userHandler.CreateUser)
-	  r.GET("/", func(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{
-      "message": "pong",
-    })
-  })
+	r.GET("/login", userHandler.Login)
+
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "welcome to my paradise !",
+		})
+	})
 }
 
 func Start(addr string) error {

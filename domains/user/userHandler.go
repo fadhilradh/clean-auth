@@ -61,3 +61,9 @@ func (h *Handler) Logout(c *gin.Context) {
 		"message": "Logout succesful",
 	})
 }
+
+func (h *Handler) GetUsers(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "users",
+	})
+}

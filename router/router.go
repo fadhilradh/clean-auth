@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/fadhilradh/simple-auth/domains/user"
+	"github.com/fadhilradh/simple-auth/middlewares"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -28,6 +29,8 @@ func InitRouter(userHandler *user.Handler) {
 
 	r.POST("/register", userHandler.CreateUser)
 	r.POST("/login", userHandler.Login)
+	r.GET("/logout", userHandler.Logout)
+	r.GET("/users", middlewares.Auth, userHandler.GetUsers)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

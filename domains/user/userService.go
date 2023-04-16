@@ -2,15 +2,12 @@ package user
 
 import (
 	"context"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/fadhilradh/simple-auth/utils"
 	"github.com/golang-jwt/jwt/v4"
-)
-
-const (
-	secretKey = "dfi31ss3ka93"
 )
 
 type service struct {
@@ -84,7 +81,7 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 		},
 	})
 
-	signedToken, err := token.SignedString([]byte(secretKey))
+	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		return &LoginRes{}, err
 	}

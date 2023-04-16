@@ -21,10 +21,9 @@ type service struct {
 func NewService(repository Repository) Service {
 	return &service{
 		Repository: repository,
-		timeout: time.Duration(5) * time.Second,
+		timeout:    time.Duration(5) * time.Second,
 	}
 }
-
 
 func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUserRes, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
@@ -37,7 +36,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 
 	u := &User{
 		Username: req.Username,
-		Email: req.Email,
+		Email:    req.Email,
 		Password: hashedPassword,
 	}
 
@@ -47,9 +46,10 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 	}
 
 	res := &CreateUserRes{
-		ID: strconv.Itoa(int(r.ID)),
+		ID:       strconv.Itoa(int(r.ID)),
 		Username: r.Username,
-		Email: r.Email,
+		Email:    r.Email,
+		Message:  "Registration successful",
 	}
 
 	return res, nil
@@ -76,24 +76,24 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaims{
-		ID: strconv.Itoa(int(u.ID)),
+		ID:       strconv.Itoa(int(u.ID)),
 		Username: u.Username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer: strconv.Itoa(int(u.ID)),
+			Issuer:    strconv.Itoa(int(u.ID)),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Minute)),
 		},
 	})
-	
+
 	signedToken, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return &LoginRes{}, err
 	}
 
 	return &LoginRes{
-		ID: strconv.Itoa(int(u.ID)),
+		ID:       strconv.Itoa(int(u.ID)),
 		Username: u.Username,
-		Email: u.Email,
-		Token: signedToken,
-		Message: "Login successful",
+		Email:    u.Email,
+		Token:    signedToken,
+		Message:  "Login successful",
 	}, nil
 }

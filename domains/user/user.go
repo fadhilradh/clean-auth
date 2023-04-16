@@ -35,6 +35,16 @@ type LoginRes struct {
 	Token    string `json:"token"`
 }
 
+type GetUserRes struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+type GetUsersRes struct {
+	Users []GetUserRes `json:"users"`
+}
+
 type Repository interface {
 	CreateUser(ctx context.Context, user *User) (*User, error)
 	GetUserByEmail(ctx context.Context, email string) (*User, error)

@@ -94,3 +94,20 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 		Message:  "Login successful",
 	}, nil
 }
+
+func (s *service) GetUserById(c context.Context, id int64) (*User, error) {
+	ctx, cancel := context.WithTimeout(c, s.timeout)
+	defer cancel()
+
+	u, err := s.Repository.GetUserById(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &User{
+		ID:       u.ID,
+		Username: u.Username,
+		Email:    u.Email,
+		Password: u.Password,
+	}, err
+}

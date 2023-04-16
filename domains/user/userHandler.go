@@ -1,7 +1,9 @@
 package user
 
 import (
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -62,8 +64,23 @@ func (h *Handler) Logout(c *gin.Context) {
 	})
 }
 
-func (h *Handler) GetUsers(c *gin.Context) {
+func (h *Handler) GetUserById(c *gin.Context) {
+	userId := c.Param("id")
+	intId, err := strconv.Atoi(userId)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	u, err := h.Service.GetUserById(c.Request.Context(), int64(intId))
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "users",
+		"user": u,
 	})
+
 }

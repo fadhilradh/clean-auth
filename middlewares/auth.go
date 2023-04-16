@@ -35,10 +35,12 @@ func Auth(c *gin.Context) {
 			c.Abort()
 		}
 		c.Next()
+		return
 	} else {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "Access token is not valid",
+			"message": "Access token is invalid",
 		})
+		return
 	}
 
 }

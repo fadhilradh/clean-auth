@@ -1,6 +1,7 @@
 package router
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/fadhilradh/simple-auth/domains/user"
@@ -25,8 +26,12 @@ func InitRouter(userHandler *user.Handler) {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	// r.POST("/register", userHandler.CreateUser)
-
+	r.POST("/register", userHandler.CreateUser)
+	  r.GET("/", func(c *gin.Context) {
+    c.JSON(http.StatusOK, gin.H{
+      "message": "pong",
+    })
+  })
 }
 
 func Start(addr string) error {

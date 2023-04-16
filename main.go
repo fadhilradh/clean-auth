@@ -12,6 +12,8 @@ func main() {
 	dbConn, err := db.NewDatabase()
 	if err != nil {
 		log.Fatalf("Could not initialize databse connection: %s", err)
+	} else {
+		log.Print("DB connection succesful")
 	}
 
 	userRepo := user.NewRepository(dbConn.GetDB())
@@ -20,5 +22,4 @@ func main() {
 
 	router.InitRouter(userHandler)
 	router.Start("localhost:8080")
-	
 }

@@ -31,7 +31,7 @@ func InitRouter(userHandler *user.Handler) {
 	r.POST("/login", userHandler.Login)
 	r.GET("/logout", userHandler.Logout)
 	r.GET("/users/:id", middlewares.Auth, userHandler.GetUserById)
-	r.GET("/users", userHandler.GetUsers)
+	r.GET("/users", middlewares.Auth, userHandler.GetUsers)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

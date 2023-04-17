@@ -73,15 +73,21 @@ func (h *Handler) GetUserById(c *gin.Context) {
 
 	u, err := h.Service.GetUserById(c.Request.Context(), int64(intId))
 
-	if err != nil {
+	if u.ID == "0" {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": "user not found",
+		})
+		c.Abort()
+	} else if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
 		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"user": u,
+		})
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"user": u,
-	})
 
 }
 

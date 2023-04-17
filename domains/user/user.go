@@ -7,12 +7,14 @@ type User struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
 }
 
 type CreateUserReq struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
 }
 
 type CreateUserRes struct {
@@ -20,6 +22,7 @@ type CreateUserRes struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Message  string `json:"message"`
+	Role     string `json:"role"`
 }
 
 type LoginReq struct {
@@ -31,6 +34,7 @@ type LoginRes struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	Role     string `json:"role"`
 	Message  string `json:"message"`
 	Token    string `json:"token"`
 }
@@ -39,6 +43,7 @@ type GetUserRes struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	Role     string `json:"role"`
 }
 
 type GetUsersRes struct {

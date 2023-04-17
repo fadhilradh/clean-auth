@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -34,6 +35,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 	u := &User{
 		Username: req.Username,
 		Email:    req.Email,
+		Role:     req.Role,
 		Password: hashedPassword,
 	}
 
@@ -46,6 +48,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 		ID:       strconv.Itoa(int(r.ID)),
 		Username: r.Username,
 		Email:    r.Email,
+		Role:     r.Role,
 		Message:  "Registration successful",
 	}
 
@@ -55,6 +58,7 @@ func (s *service) CreateUser(c context.Context, req *CreateUserReq) (*CreateUser
 type MyJWTClaims struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
+	Role     string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -72,11 +76,12 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 		return &LoginRes{}, err
 	}
 
+	fmt.Println(u.Role)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyJWTClaims{
-		ID:       strconv.Itoa(int(u.ID)),
-		Username: u.Username,
+		ID:   strconv.Itoa(int(u.ID)),
+		Role: u.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    strconv.Itoa(int(u.ID)),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Minute)),
 		},
 	})
@@ -91,6 +96,7 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 		Username: u.Username,
 		Email:    u.Email,
 		Token:    signedToken,
+		Role:     u.Role,
 		Message:  "Login successful",
 	}, nil
 }
@@ -108,6 +114,7 @@ func (s *service) GetUserById(c context.Context, id int64) (*GetUserRes, error) 
 		ID:       strconv.Itoa(int(u.ID)),
 		Username: u.Username,
 		Email:    u.Email,
+		Role:     u.Role,
 	}, err
 }
 
@@ -127,8 +134,8 @@ func (s *service) GetUsers(c context.Context) (*GetUsersRes, error) {
 			ID:       strconv.Itoa(int(u[i].ID)),
 			Email:    u[i].Email,
 			Username: u[i].Username,
+			Role:     u[i].Role,
 		}
-
 		users = append(users, ur)
 	}
 

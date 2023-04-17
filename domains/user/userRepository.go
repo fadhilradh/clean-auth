@@ -22,8 +22,8 @@ func NewRepository(db DBTX) Repository {
 
 func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) {
 	var lastInsertId int
-	query := "INSERT INTO users(username, password, email) VALUES($1, $2, $3) RETURNING id"
-	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email).
+	query := "INSERT INTO users(username, password, email, role) VALUES($1, $2, $3, $4) RETURNING id"
+	err := r.db.QueryRowContext(ctx, query, user.Username, user.Password, user.Email, user.Role).
 		Scan(&lastInsertId)
 	if err != nil {
 		return &User{}, err
@@ -35,9 +35,9 @@ func (r *repository) CreateUser(ctx context.Context, user *User) (*User, error) 
 
 func (r *repository) GetUserByEmail(ctx context.Context, email string) (*User, error) {
 	u := User{}
-	query := "SELECT id, email, username, password FROM users WHERE email = $1"
+	query := "SELECT id, email, username, password, role FROM users WHERE email = $1"
 	err := r.db.QueryRowContext(ctx, query, email).
-		Scan(&u.ID, &u.Email, &u.Username, &u.Password)
+		Scan(&u.ID, &u.Email, &u.Username, &u.Password, &u.Role)
 
 	if err != nil {
 		return &User{}, nil
@@ -48,9 +48,9 @@ func (r *repository) GetUserByEmail(ctx context.Context, email string) (*User, e
 
 func (r *repository) GetUserById(ctx context.Context, id int64) (*User, error) {
 	u := User{}
-	query := "SELECT id, email, username, password FROM users WHERE id = $1"
+	query := "SELECT id, email, username, password, role FROM users WHERE id = $1"
 	err := r.db.QueryRowContext(ctx, query, id).
-		Scan(&u.ID, &u.Email, &u.Username, &u.Password)
+		Scan(&u.ID, &u.Email, &u.Username, &u.Password, &u.Role)
 
 	if err != nil {
 		return &User{}, nil
@@ -60,7 +60,7 @@ func (r *repository) GetUserById(ctx context.Context, id int64) (*User, error) {
 }
 
 func (q *repository) GetUsers(ctx context.Context) ([]User, error) {
-	query := "SELECT id, email, username, password FROM users"
+	query := "SELECT id, email, username, password, role FROM users"
 	rows, err := q.db.QueryContext(ctx, query)
 	if err != nil {
 		return nil, err
@@ -74,6 +74,7 @@ func (q *repository) GetUsers(ctx context.Context) ([]User, error) {
 			&i.Email,
 			&i.Username,
 			&i.Password,
+			&i.Role,
 		); err != nil {
 			return nil, err
 		}

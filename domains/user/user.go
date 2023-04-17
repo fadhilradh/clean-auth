@@ -42,17 +42,19 @@ type GetUserRes struct {
 }
 
 type GetUsersRes struct {
-	Users []*GetUserRes `json:"users"`
+	Users *[]GetUserRes `json:"users"`
 }
 
 type Repository interface {
 	CreateUser(ctx context.Context, user *User) (*User, error)
 	GetUserByEmail(ctx context.Context, email string) (*User, error)
 	GetUserById(ctx context.Context, id int64) (*User, error)
+	GetUsers(ctx context.Context) ([]User, error)
 }
 
 type Service interface {
 	CreateUser(ctx context.Context, req *CreateUserReq) (*CreateUserRes, error)
 	Login(ctx context.Context, req *LoginReq) (*LoginRes, error)
-	GetUserById(ctx context.Context, id int64) (*User, error)
+	GetUserById(ctx context.Context, id int64) (*GetUserRes, error)
+	GetUsers(ctx context.Context) (*GetUsersRes, error)
 }

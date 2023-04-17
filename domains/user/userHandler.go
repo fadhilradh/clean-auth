@@ -84,3 +84,18 @@ func (h *Handler) GetUserById(c *gin.Context) {
 	})
 
 }
+
+func (h *Handler) GetUsers(c *gin.Context) {
+	users, err := h.Service.GetUsers(c)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": users,
+	})
+}

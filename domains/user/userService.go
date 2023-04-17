@@ -95,7 +95,7 @@ func (s *service) Login(c context.Context, req *LoginReq) (*LoginRes, error) {
 	}, nil
 }
 
-func (s *service) GetUserById(c context.Context, id int64) (*User, error) {
+func (s *service) GetUserById(c context.Context, id int64) (*GetUserRes, error) {
 	ctx, cancel := context.WithTimeout(c, s.timeout)
 	defer cancel()
 
@@ -104,10 +104,35 @@ func (s *service) GetUserById(c context.Context, id int64) (*User, error) {
 		return nil, err
 	}
 
-	return &User{
-		ID:       u.ID,
+	return &GetUserRes{
+		ID:       strconv.Itoa(int(u.ID)),
 		Username: u.Username,
 		Email:    u.Email,
-		Password: u.Password,
+	}, err
+}
+
+func (s *service) GetUsers(c context.Context) (*GetUsersRes, error) {
+	ctx, cancel := context.WithTimeout(c, s.timeout)
+	defer cancel()
+
+	u, err := s.Repository.GetUsers(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []GetUserRes
+
+	for i := 0; i < len(u); i++ {
+		ur := GetUserRes{
+			ID:       strconv.Itoa(int(u[i].ID)),
+			Email:    u[i].Email,
+			Username: u[i].Username,
+		}
+
+		users = append(users, ur)
+	}
+
+	return &GetUsersRes{
+		Users: &users,
 	}, err
 }

@@ -22,6 +22,5 @@ func NewDatabase() (*Database, error) {
 }
 
 func (d *Database) GetDB() *sql.DB {
-	return d.db 
+	return d.db
 }
-
